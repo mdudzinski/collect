@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import org.apache.commons.io.IOUtils;
+import org.javarosa.core.model.Action;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.instance.InstanceInitializationFactory;
@@ -46,6 +47,7 @@ import org.odk.collect.android.external.handler.ExternalDataHandlerPull;
 import org.odk.collect.android.listeners.FormLoaderListener;
 import org.odk.collect.android.logic.FileReferenceFactory;
 import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.logic.LastEditTimestampAction;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ZipUtils;
 
@@ -154,6 +156,8 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             // that means that the user has cancelled, so no need to go further
             return null;
         }
+
+        formDef.registerEventListener(Action.EVENT_XFORMS_VALUE_CHANGED, new LastEditTimestampAction());
 
         // create FormEntryController from formdef
         final FormEntryModel fem = new FormEntryModel(formDef);
